@@ -23,14 +23,17 @@ app.use(
 app.use(
     cors({
         origin: (origin, callback) => {
-            // Development: allow any localhost port
+            // Allow requests with no origin (like mobile apps, curl, postman, or direct browser visits)
+            if (!origin) return callback(null, true);
+
+            // Development: allow localhost
             if (env.NODE_ENV === 'development') {
-                if (!origin || /^http:\/\/localhost:\d+$/.test(origin)) {
+                if (/^http:\/\/localhost:\d+$/.test(origin)) {
                     return callback(null, true);
                 }
             }
             // Production: allow CLIENT_URL + any Vercel preview deployment
-            const vercelPreview = /^https:\/\/[\w-]+(\.[\w-]+)*\.vercel\.app$/.test(origin ?? '');
+            const vercelPreview = /^https:\/\/[\w-]+(\.[\w-]+)*\.vercel\.app$/.test(origin);
             if (origin === env.CLIENT_URL || vercelPreview) {
                 return callback(null, true);
             }
