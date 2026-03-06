@@ -176,8 +176,8 @@ Assignment/
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-username/your-repo.git
-cd Assignment
+git clone https://github.com/abhi-14gyan/taskmanagement.git
+cd taskmanagement
 ```
 
 ### 2. Backend setup
