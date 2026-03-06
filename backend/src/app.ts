@@ -22,23 +22,8 @@ app.use(
 );
 app.use(
     cors({
-        origin: (origin, callback) => {
-            // Allow requests with no origin (like mobile apps, curl, postman, or direct browser visits)
-            if (!origin) return callback(null, true);
+        origin: true, // Allow all origins for the public API
 
-            // Development: allow localhost
-            if (env.NODE_ENV === 'development') {
-                if (/^http:\/\/localhost:\d+$/.test(origin)) {
-                    return callback(null, true);
-                }
-            }
-            // Production: allow CLIENT_URL + any Vercel preview deployment
-            const vercelPreview = /^https:\/\/[\w-]+(\.[\w-]+)*\.vercel\.app$/.test(origin);
-            if (origin === env.CLIENT_URL || vercelPreview) {
-                return callback(null, true);
-            }
-            callback(new Error(`CORS: origin ${origin} not allowed`));
-        },
         credentials: true, // Required for HttpOnly cookies cross-origin
         methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
         allowedHeaders: ['Content-Type', 'Authorization'],
