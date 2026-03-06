@@ -1,0 +1,41 @@
+# Render deployment configuration
+# Docs: https://render.com/docs/render-yaml
+
+services:
+  - type: web
+    name: taskflow-backend
+    runtime: node
+    region: singapore           # Change to nearest region: oregon, frankfurt, ohio, etc.
+    plan: free                  # Upgrade to starter ($7/mo) to avoid cold starts
+
+    # Build: compile TypeScript → dist/
+    buildCommand: npm install && npm run build
+
+    # Start: run compiled JS directly (no ts-node-dev overhead)
+    startCommand: npm start
+
+    # Health check — Render uses this to confirm successful deployment
+    healthCheckPath: /health
+
+    envVars:
+      - key: NODE_ENV
+        value: production
+
+      - key: PORT
+        value: 5000
+
+      # ── Set these in the Render Dashboard → Environment tab ──
+      - key: MONGODB_URI
+        sync: false             # Will be filled in the Dashboard (never commit real URI)
+
+      - key: JWT_SECRET
+        generateValue: true     # Render auto-generates a secure random value
+
+      - key: JWT_EXPIRES_IN
+        value: 7d
+
+      - key: COOKIE_SECRET
+        generateValue: true     # Render auto-generates a secure random value
+
+      - key: CLIENT_URL
+        sync: false             # Set to your Vercel URL, e.g. https://taskflow.vercel.app
